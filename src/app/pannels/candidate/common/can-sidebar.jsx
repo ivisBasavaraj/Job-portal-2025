@@ -37,33 +37,33 @@ function CanSidebarSection(props) {
                 <div className="admin-nav scrollbar-macosx">
                     <ul>
                         <li className={setMenuActive(currentpath, canRoute(candidate.DASHBOARD))}>
-                            <NavLink to={canRoute(candidate.DASHBOARD)}>
-                                <i className="fa fa-home" style={{ color: '#ff6b35' }} />
-                                <span className="admin-nav-text">Dashboard</span>
+                            <NavLink to={canRoute(candidate.DASHBOARD)} style={{display: 'flex', alignItems: 'center'}}>
+                                <i className="fa fa-home" style={{minWidth: '30px', textAlign: 'center'}} />
+                                <span className="admin-nav-text" style={{paddingLeft: '15px'}}>Dashboard</span>
                             </NavLink>
                         </li>
                         <li className={setMenuActive(currentpath, canRoute(candidate.PROFILE))}>
-                            <NavLink to={canRoute(candidate.PROFILE)}>
-                                <i className="fa fa-user" style={{ color: '#ff6b35' }} />
-                                <span className="admin-nav-text">My Profile</span>
+                            <NavLink to={canRoute(candidate.PROFILE)} style={{display: 'flex', alignItems: 'center'}}>
+                                <i className="fa fa-user" style={{minWidth: '30px', textAlign: 'center'}} />
+                                <span className="admin-nav-text" style={{paddingLeft: '15px'}}>My Profile</span>
                             </NavLink>
                         </li>
                         <li className={setMenuActive(currentpath, canRoute(candidate.STATUS))}>
-                            <NavLink to={canRoute(candidate.STATUS)}>
-                                <i className="fa fa-briefcase" style={{ color: '#ff6b35' }} />
-                                <span className="admin-nav-text">My Applications</span>
+                            <NavLink to={canRoute(candidate.STATUS)} style={{display: 'flex', alignItems: 'center'}}>
+                                <i className="fa fa-briefcase" style={{minWidth: '30px', textAlign: 'center'}} />
+                                <span className="admin-nav-text" style={{paddingLeft: '15px'}}>My Applications</span>
                             </NavLink>
                         </li>
                         <li className={setMenuActive(currentpath, canRoute(candidate.RESUME))}>
-                            <NavLink to={canRoute(candidate.RESUME)}>
-                                <i className="fa fa-file-alt" style={{ color: '#ff6b35' }} />
-                                <span className="admin-nav-text">My Resume</span>
+                            <NavLink to={canRoute(candidate.RESUME)} style={{display: 'flex', alignItems: 'center'}}>
+                                <i className="fa fa-file-alt" style={{minWidth: '30px', textAlign: 'center'}} />
+                                <span className="admin-nav-text" style={{paddingLeft: '15px'}}>My Resume</span>
                             </NavLink>
                         </li>
                         <li>
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#logout-dash-profile">
-                                <i className="fa fa-sign-out-alt" style={{ color: '#dc3545' }} />
-                                <span className="admin-nav-text">Logout</span>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#logout-dash-profile" style={{display: 'flex', alignItems: 'center'}}>
+                                <i className="fa fa-sign-out-alt" style={{minWidth: '30px', textAlign: 'center'}} />
+                                <span className="admin-nav-text" style={{paddingLeft: '15px'}}>Logout</span>
                             </a>
                         </li>
                     </ul>

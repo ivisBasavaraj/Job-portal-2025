@@ -1,27 +1,30 @@
-import React from 'react';
-
-const jobPosts = [
-  {
-    title: 'Senior React Developer',
-    applications: 34,
-    posted: '2 days ago',
-    status: 'active',
-  },
-  {
-    title: 'Product Manager',
-    applications: 28,
-    posted: '5 days ago',
-    status: 'active',
-  },
-  {
-    title: 'UI/UX Designer',
-    applications: 19,
-    posted: '1 week ago',
-    status: 'inactive',
-  },
-];
+import React, { useState, useEffect } from 'react';
 
 const RecentJobPosts = () => {
+  const [jobPosts, setJobPosts] = useState([]);
+
+  useEffect(() => {
+    fetchRecentJobs();
+  }, []);
+
+  const fetchRecentJobs = async () => {
+    try {
+      const token = localStorage.getItem('employerToken');
+      if (!token) return;
+
+      const response = await fetch('http://localhost:5000/api/employer/recent-jobs', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        setJobPosts(data.jobs || []);
+      }
+    } catch (error) {
+      console.error('Error fetching recent jobs:', error);
+    }
+  };
   return (
     <div className="col-lg-12 col-md-12 mb-4">
       <div className="panel panel-default">
@@ -30,15 +33,22 @@ const RecentJobPosts = () => {
           <p className="text-muted">Your latest job postings</p>
         </div>
         <div className="panel-body wt-panel-body bg-white">
-          {jobPosts.map((job, index) => (
+          {jobPosts.length === 0 && (
+            <div className="text-center">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          )}
+          {jobPosts.length > 0 ? jobPosts.map((job, index) => (
             <div
-              key={index}
+              key={job._id || index}
               className="d-flex justify-content-between align-items-center border rounded p-3 mb-3"
             >
               <div>
                 <h5 className="mb-1">{job.title}</h5>
                 <p className="mb-0 text-muted">
-                  {job.applications} applications &bull; Posted {job.posted}
+                  {job.applicationCount || 0} applications &bull; Posted {new Date(job.createdAt).toLocaleDateString()}
                 </p>
               </div>
               <div>
@@ -50,33 +60,13 @@ const RecentJobPosts = () => {
                 >
                   {job.status}
                 </span>
-                {job.status === 'active' && (
-                  <span
-                    className="ms-2"
-                    style={{
-                      fontSize: '16px',
-                      color: '#999',
-                      verticalAlign: 'middle',
-                    }}
-                  >
-                    {/* &#x2715; */}
-                  </span>
-                )}
-                {job.status === 'active' && (
-                  <span
-                    className="ms-2"
-                    style={{
-                      fontSize: '16px',
-                      color: '#999',
-                      verticalAlign: 'middle',
-                    }}
-                  >
-                    {/* &#128336; */}
-                  </span>
-                )}
               </div>
             </div>
-          ))}
+          )) : (
+            <div className="text-center text-muted p-4">
+              <p>No recent job posts found</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

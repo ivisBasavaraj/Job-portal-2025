@@ -1,8 +1,7 @@
-
 import Chart from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
-function EmployerDashboardJobFunnelChart() {
+function EmployerDashboardJobFunnelChart({ stats = {} }) {
 	const chartData = {
 		labels: [
 			"Jobs Posted",
@@ -14,7 +13,7 @@ function EmployerDashboardJobFunnelChart() {
 		datasets: [
 			{
 				label: "Candidate Flow",
-				data: [10,150, 80, 40, 12], // Sample values
+				data: [stats.totalJobs || 0, stats.totalApplications || 0, stats.shortlisted || 0, Math.floor((stats.shortlisted || 0) * 0.5), Math.floor((stats.shortlisted || 0) * 0.2)],
 				backgroundColor: (context) => {
 					const chart = context.chart;
 					const { ctx, chartArea } = chart;

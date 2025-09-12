@@ -52,23 +52,19 @@ function EmpHeaderSection(props) {
                                 <li className="header-widget">
                                     <div className="dashboard-user-section">
                                         <div className="listing-user">
-                                            {/* <div className="dropdown"> */}
-                                               
-                                                    <div className="">
-                                                        <span>
-                                                            {profileData?.logo ? (
-                                                                <img 
-                                                                    src={profileData.logo} 
-                                                                    alt="Company Logo" 
-                                                                    style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
-                                                                />
-                                                            ) : (
-                                                                <JobZImage src="images/user-avtar/pic4.jpg" alt="" />
-                                                            )}
-                                                        </span>
-                                                    </div>
-                                               
-                                            {/* </div> */}
+                                            <div className="">
+                                                <span>
+                                                    {profileData?.logo ? (
+                                                        <img 
+                                                            src={profileData.logo} 
+                                                            alt="Company Logo" 
+                                                            style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
+                                                        />
+                                                    ) : (
+                                                        <JobZImage src="images/user-avtar/pic4.jpg" alt="" />
+                                                    )}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>

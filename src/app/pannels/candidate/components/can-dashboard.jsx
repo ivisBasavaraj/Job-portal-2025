@@ -13,10 +13,11 @@ function CanDashboardPage() {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [dashboardData, setDashboardData] = useState({
-        applied: 12,
-        inProgress: 5,
-        shortlisted: 3,
-        profileCompletion: 75
+        applied: 0,
+        inProgress: 0,
+        shortlisted: 0,
+        profileCompletion: 0,
+        completionMessage: 'Loading...'
     });
     const [loading, setLoading] = useState(true);
     const [recentActivities] = useState([
@@ -32,9 +33,27 @@ function CanDashboardPage() {
 
     const fetchDashboardData = async () => {
         try {
-            const data = await api.getCandidateDashboard();
-            if (data.success) {
-                setDashboardData(prev => ({ ...prev, ...data.data }));
+            const token = localStorage.getItem('candidateToken');
+            if (!token) {
+                console.log('No candidate token found');
+                setLoading(false);
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/api/candidate/dashboard/stats', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                setDashboardData({
+                    applied: data.stats.applied || 0,
+                    inProgress: data.stats.inProgress || 0,
+                    shortlisted: data.stats.shortlisted || 0,
+                    profileCompletion: data.stats.profileCompletion || 0,
+                    completionMessage: data.stats.completionMessage || 'Complete your profile to improve visibility.'
+                });
             }
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
@@ -156,76 +175,90 @@ function CanDashboardPage() {
                         boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
                         height: '100%'
                     }}>
-                        <h4 style={{ color: '#2c3e50', marginBottom: '1.5rem', fontSize: '1.2rem', fontWeight: '600' }}>
-                            Profile Completion
-                        </h4>
-                        
-                        <div className="text-center mb-3">
-                            <div style={{ 
-                                position: 'relative', 
-                                display: 'inline-block',
-                                width: '120px',
-                                height: '120px'
-                            }}>
-                                <svg width="120" height="120" style={{ transform: 'rotate(-90deg)' }}>
-                                    <circle cx="60" cy="60" r="50" fill="none" stroke="#e9ecef" strokeWidth="8"/>
-                                    <circle 
-                                        cx="60" 
-                                        cy="60" 
-                                        r="50" 
-                                        fill="none" 
-                                        stroke="#ff6b35" 
-                                        strokeWidth="8"
-                                        strokeDasharray={`${2 * Math.PI * 50}`}
-                                        strokeDashoffset={`${2 * Math.PI * 50 * (1 - dashboardData.profileCompletion / 100)}`}
-                                        strokeLinecap="round"
-                                    />
-                                </svg>
+                        <div className="d-flex flex-column flex-md-row align-items-center gap-3">
+                            {/* Progress Circle */}
+                            <div className="flex-shrink-0">
                                 <div style={{ 
-                                    position: 'absolute', 
-                                    top: '50%', 
-                                    left: '50%', 
-                                    transform: 'translate(-50%, -50%)',
-                                    fontSize: '1.5rem',
-                                    fontWeight: '700',
-                                    color: '#2c3e50'
+                                    position: 'relative', 
+                                    display: 'inline-block',
+                                    width: '100px',
+                                    height: '100px'
                                 }}>
-                                    {dashboardData.profileCompletion}%
+                                    <svg width="100" height="100" style={{ transform: 'rotate(-90deg)' }}>
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#e9ecef" strokeWidth="6"/>
+                                        <circle 
+                                            cx="50" 
+                                            cy="50" 
+                                            r="40" 
+                                            fill="none" 
+                                            stroke="#ff6b35" 
+                                            strokeWidth="6"
+                                            strokeDasharray={`${2 * Math.PI * 40}`}
+                                            strokeDashoffset={`${2 * Math.PI * 40 * (1 - dashboardData.profileCompletion / 100)}`}
+                                            strokeLinecap="round"
+                                        />
+                                    </svg>
+                                    <div style={{ 
+                                        position: 'absolute', 
+                                        top: '50%', 
+                                        left: '50%', 
+                                        transform: 'translate(-50%, -50%)',
+                                        fontSize: '1.3rem',
+                                        fontWeight: '700',
+                                        color: '#2c3e50'
+                                    }}>
+                                        {dashboardData.profileCompletion}%
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div className="d-flex gap-2">
-                            <button 
-                                className="btn flex-fill" 
-                                onClick={() => navigate(canRoute(candidate.PROFILE))}
-                                style={{ 
-                                    backgroundColor: '#ff6b35', 
-                                    color: 'white', 
-                                    border: 'none',
-                                    borderRadius: '8px',
-                                    padding: '0.75rem',
-                                    fontSize: '0.9rem',
-                                    fontWeight: '500'
-                                }}
-                            >
-                                Update Profile
-                            </button>
-                            <button 
-                                className="btn flex-fill" 
-                                onClick={() => window.open(`/candidate-detail/${user?.id || 1}`, '_blank')}
-                                style={{ 
-                                    backgroundColor: 'transparent', 
-                                    color: '#ff6b35', 
-                                    border: '2px solid #ff6b35',
-                                    borderRadius: '8px',
-                                    padding: '0.75rem',
-                                    fontSize: '0.9rem',
-                                    fontWeight: '500'
-                                }}
-                            >
-                                Preview Profile
-                            </button>
+                            
+                            {/* Content */}
+                            <div className="flex-grow-1 text-center text-md-start">
+                                <h4 style={{ color: '#2c3e50', marginBottom: '0.5rem', fontSize: '1.2rem', fontWeight: '600' }}>
+                                    Complete Your Profile
+                                </h4>
+                                <p style={{ 
+                                    fontSize: '0.85rem', 
+                                    color: '#6c757d', 
+                                    margin: '0 0 1.5rem 0',
+                                    lineHeight: '1.4'
+                                }}>
+                                    {dashboardData.completionMessage}
+                                </p>
+                                
+                                <div className="d-flex flex-column flex-sm-row gap-2">
+                                    <button 
+                                        className="btn" 
+                                        onClick={() => navigate(canRoute(candidate.PROFILE))}
+                                        style={{ 
+                                            backgroundColor: '#ff6b35', 
+                                            color: 'white', 
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            padding: '0.6rem 1.2rem',
+                                            fontSize: '0.85rem',
+                                            fontWeight: '500'
+                                        }}
+                                    >
+                                        Update Profile
+                                    </button>
+                                    <button 
+                                        className="btn" 
+                                        onClick={() => window.open(`/candidate-detail/${user?.id || 1}`, '_blank')}
+                                        style={{ 
+                                            backgroundColor: 'transparent', 
+                                            color: '#ff6b35', 
+                                            border: '1px solid #ff6b35',
+                                            borderRadius: '8px',
+                                            padding: '0.6rem 1.2rem',
+                                            fontSize: '0.85rem',
+                                            fontWeight: '500'
+                                        }}
+                                    >
+                                        Preview Profile
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

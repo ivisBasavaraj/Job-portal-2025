@@ -32,7 +32,7 @@ function Header1({ _config }) {
                         <div className="container-fluid clearfix">
                             <div className="logo-header">
                                 <div className="logo-header-inner logo-header-one">
-                                    <NavLink to={publicUser.HOME16}>
+                                    <NavLink to={publicUser.INITIAL}>
                                         {
                                             _config.withBlackLogo
                                                 ?
