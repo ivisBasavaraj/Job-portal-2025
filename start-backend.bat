@@ -1,9 +1,0 @@
-@echo off
-echo Starting Job Portal Backend...
-
-cd tale-backend
-echo Installing dependencies...
-call npm install
-
-echo Starting backend server...
-call npm run dev
