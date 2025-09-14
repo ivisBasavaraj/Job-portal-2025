@@ -1,13 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { popupType } from "../../../globals/constants";
 import { publicUser } from "../../../globals/route-names";
+import { useAuth } from "../../../contexts/AuthContext";
+import { logout as authLogout } from "../../../utils/auth";
 
 function YesNoPopup(props) {
 
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const yesHandler = () => {
         if(props.type === popupType.LOGOUT) {
+            logout();
+            authLogout();
             navigateToAfterLogin();
         }
     }

@@ -2,23 +2,11 @@
 import JobZImage from "../jobz-img";
 import { NavLink } from "react-router-dom";
 import { publicUser } from "../../../globals/route-names";
-import { useState, useEffect } from "react";
-import NotificationBell from "../../../components/NotificationBell";
+import { useState } from "react";
 
 function Header1({ _config }) {
 
     const [menuActive, setMenuActive] = useState(false);
-    const [userRole, setUserRole] = useState(null);
-
-    useEffect(() => {
-        const candidateToken = localStorage.getItem('candidateToken');
-        const employerToken = localStorage.getItem('employerToken');
-        const adminToken = localStorage.getItem('adminToken');
-        
-        if (candidateToken) setUserRole('candidate');
-        else if (employerToken) setUserRole('employer');
-        else if (adminToken) setUserRole('admin');
-    }, []);
 
     function handleNavigationClick () {
         setMenuActive(!menuActive);
@@ -70,15 +58,12 @@ function Header1({ _config }) {
                                 <span className="icon-bar icon-bar-three" />
                             </button>
                             {/* MAIN Vav */}
-                            <div className="nav-animation header-nav navbar-collapse collapse d-flex justify-content-center">
-                                <ul className=" nav navbar-nav">
-                                    <li className="has-mega-menu"><a href="/">Home</a></li>
-
-                                    <li className="has-child"><a href="/job-grid">Jobs</a></li>
-
-                                    <li className="has-child"><a href="/emp-grid">Employers</a></li>
-
-                                    <li className="has-child"><a href="/contact-us">Contact Us</a></li>
+                            <div className="nav-animation header-nav navbar-collapse d-flex justify-content-center" style={{display: 'flex !important'}}>
+                                <ul className="nav navbar-nav" style={{display: 'flex', listStyle: 'none', gap: '2rem'}}>
+                                    <li className="has-mega-menu"><a href="/" style={{color: '#333', textDecoration: 'none', padding: '10px 15px'}}>Home</a></li>
+                                    <li className="has-child"><a href="/job-grid" style={{color: '#333', textDecoration: 'none', padding: '10px 15px'}}>Jobs</a></li>
+                                    <li className="has-child"><a href="/emp-grid" style={{color: '#333', textDecoration: 'none', padding: '10px 15px'}}>Employers</a></li>
+                                    <li className="has-child"><a href="/contact-us" style={{color: '#333', textDecoration: 'none', padding: '10px 15px'}}>Contact Us</a></li>
                                 </ul>
                             </div>
 
@@ -87,12 +72,9 @@ function Header1({ _config }) {
                                 <div className="extra-cell">
                                     <div className="header-nav-btn-section">
                                         <div className="twm-nav-btn-left">
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <NotificationBell userRole={userRole} />
-                                                <a className="twm-nav-sign-up" data-bs-toggle="modal" href="#sign_up_popup" role="button">
-                                                    <i className="feather-log-in" /> Sign Up
-                                                </a>
-                                            </div>
+                                            <a className="twm-nav-sign-up" data-bs-toggle="modal" href="#sign_up_popup" role="button">
+                                                <i className="feather-log-in" /> Sign Up
+                                            </a>
                                         </div>
 
                                         <div className="twm-nav-btn-right">

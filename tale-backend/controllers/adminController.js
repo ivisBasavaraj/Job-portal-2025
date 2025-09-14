@@ -218,14 +218,34 @@ exports.getAllCandidates = async (req, res) => {
 exports.updateEmployerStatus = async (req, res) => {
   try {
     const { status, isApproved } = req.body;
+
     const updateData = {};
-    if (status !== undefined) updateData.status = status;
-    if (isApproved !== undefined) updateData.isApproved = isApproved;
+
+    // Normalize and validate status to only 'active' | 'inactive'
+    if (status !== undefined) {
+      const normalized = String(status).toLowerCase();
+      if (normalized === 'approved') {
+        updateData.status = 'active';
+      } else if (normalized === 'rejected') {
+        updateData.status = 'inactive';
+      } else if (normalized === 'active' || normalized === 'inactive') {
+        updateData.status = normalized;
+      }
+      // Any other status values are ignored to prevent invalid writes
+    }
+
+    // Update approval flag
+    if (isApproved !== undefined) updateData.isApproved = !!isApproved;
+
+    // If approving and no explicit status provided, ensure account is active
+    if (updateData.isApproved === true && updateData.status === undefined) {
+      updateData.status = 'active';
+    }
     
     const employer = await Employer.findByIdAndUpdate(
       req.params.id,
       updateData,
-      { new: true }
+      { new: true, runValidators: true }
     ).select('-password');
 
     if (!employer) {

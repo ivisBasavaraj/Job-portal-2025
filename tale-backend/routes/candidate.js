@@ -53,6 +53,7 @@ router.post('/jobs/:jobId/apply', [
 ], handleValidationErrors, candidateController.applyForJob);
 
 router.post('/applications', candidateController.applyForJob);
+router.post('/apply/:jobId', candidateController.applyForJob);
 router.get('/applications', candidateController.getAppliedJobs);
 router.get('/applications/:applicationId/status', candidateController.getApplicationStatus);
 

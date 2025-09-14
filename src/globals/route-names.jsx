@@ -23,7 +23,7 @@ export const publicUser = {
     employer: {
         GRID: "/emp-grid",
         LIST: "/emp-list",
-        DETAIL1: "/emp-detail/1",
+        DETAIL1: "/emp-detail/:id",
     },
     pages: {
         ABOUT:          "/about-us",
@@ -34,6 +34,7 @@ export const publicUser = {
         MAINTENANCE:    "/under-maintenance",
         COMING:         "/coming-soon",
         LOGIN:          "/login",
+        ADMIN_LOGIN:    "/admin-login",
         AFTER_LOGIN:    "/after-login",
         ICONS:          "/icons",
         FORGOT:         "/forgot-password"

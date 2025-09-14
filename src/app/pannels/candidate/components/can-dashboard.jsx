@@ -85,81 +85,87 @@ function CanDashboardPage() {
             <div className="row mb-4">
                 <div className="col-lg-4 col-md-6 mb-3">
                     <div style={{ 
-                        backgroundColor: 'white', 
-                        padding: '1.5rem', 
-                        borderRadius: '12px', 
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                        borderLeft: '4px solid #007bff'
+                        backgroundColor: '#E3F2FD', 
+                        padding: '2rem', 
+                        borderRadius: '16px', 
+                        boxShadow: '0 4px 20px rgba(227, 242, 253, 0.3)',
+                        transition: 'all 0.3s ease',
+                        cursor: 'pointer'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.transform = 'translateY(-5px)';
+                        e.target.style.boxShadow = '0 8px 30px rgba(227, 242, 253, 0.4)';
+                        e.target.style.backgroundColor = '#BBDEFB';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 4px 20px rgba(227, 242, 253, 0.3)';
+                        e.target.style.backgroundColor = '#E3F2FD';
                     }}>
-                        <div className="d-flex align-items-center">
-                            <div style={{ 
-                                backgroundColor: '#e3f2fd', 
-                                padding: '12px', 
-                                borderRadius: '50%', 
-                                marginRight: '1rem'
-                            }}>
-                                <i className="fa fa-paper-plane" style={{ color: '#007bff', fontSize: '1.2rem' }}></i>
-                            </div>
-                            <div>
-                                <h3 style={{ margin: 0, color: '#2c3e50', fontSize: '2rem', fontWeight: '700' }}>
-                                    <CountUp end={dashboardData.applied} duration={2} />
-                                </h3>
-                                <p style={{ margin: 0, color: '#6c757d', fontSize: '0.9rem' }}>Applied</p>
-                            </div>
+                        <div className="text-center">
+                            <i className="fa fa-paper-plane" style={{ color: 'white', fontSize: '2.5rem', marginBottom: '1rem' }}></i>
+                            <h3 style={{ margin: 0, color: 'white', fontSize: '3rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+                                <CountUp end={dashboardData.applied} duration={2} />
+                            </h3>
+                            <p style={{ margin: 0, color: 'white', fontSize: '0.9rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px' }}>Applied</p>
                         </div>
                     </div>
                 </div>
 
                 <div className="col-lg-4 col-md-6 mb-3">
                     <div style={{ 
-                        backgroundColor: 'white', 
-                        padding: '1.5rem', 
-                        borderRadius: '12px', 
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                        borderLeft: '4px solid #ffc107'
+                        backgroundColor: '#FFF8E1', 
+                        padding: '2rem', 
+                        borderRadius: '16px', 
+                        boxShadow: '0 4px 20px rgba(255, 248, 225, 0.3)',
+                        transition: 'all 0.3s ease',
+                        cursor: 'pointer'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.transform = 'translateY(-5px)';
+                        e.target.style.boxShadow = '0 8px 30px rgba(255, 248, 225, 0.4)';
+                        e.target.style.backgroundColor = '#FFF3C4';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 4px 20px rgba(255, 248, 225, 0.3)';
+                        e.target.style.backgroundColor = '#FFF8E1';
                     }}>
-                        <div className="d-flex align-items-center">
-                            <div style={{ 
-                                backgroundColor: '#fff8e1', 
-                                padding: '12px', 
-                                borderRadius: '50%', 
-                                marginRight: '1rem'
-                            }}>
-                                <i className="fa fa-clock" style={{ color: '#ffc107', fontSize: '1.2rem' }}></i>
-                            </div>
-                            <div>
-                                <h3 style={{ margin: 0, color: '#2c3e50', fontSize: '2rem', fontWeight: '700' }}>
-                                    <CountUp end={dashboardData.inProgress} duration={2} />
-                                </h3>
-                                <p style={{ margin: 0, color: '#6c757d', fontSize: '0.9rem' }}>In Progress</p>
-                            </div>
+                        <div className="text-center">
+                            <i className="fa fa-clock" style={{ color: 'white', fontSize: '2.5rem', marginBottom: '1rem' }}></i>
+                            <h3 style={{ margin: 0, color: 'white', fontSize: '3rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+                                <CountUp end={dashboardData.inProgress} duration={2} />
+                            </h3>
+                            <p style={{ margin: 0, color: 'white', fontSize: '0.9rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px' }}>In Progress</p>
                         </div>
                     </div>
                 </div>
 
                 <div className="col-lg-4 col-md-6 mb-3">
                     <div style={{ 
-                        backgroundColor: 'white', 
-                        padding: '1.5rem', 
-                        borderRadius: '12px', 
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                        borderLeft: '4px solid #28a745'
+                        backgroundColor: '#E8F5E8', 
+                        padding: '2rem', 
+                        borderRadius: '16px', 
+                        boxShadow: '0 4px 20px rgba(232, 245, 232, 0.3)',
+                        transition: 'all 0.3s ease',
+                        cursor: 'pointer'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.transform = 'translateY(-5px)';
+                        e.target.style.boxShadow = '0 8px 30px rgba(232, 245, 232, 0.4)';
+                        e.target.style.backgroundColor = '#C8E6C9';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 4px 20px rgba(232, 245, 232, 0.3)';
+                        e.target.style.backgroundColor = '#E8F5E8';
                     }}>
-                        <div className="d-flex align-items-center">
-                            <div style={{ 
-                                backgroundColor: '#e8f5e8', 
-                                padding: '12px', 
-                                borderRadius: '50%', 
-                                marginRight: '1rem'
-                            }}>
-                                <i className="fa fa-star" style={{ color: '#28a745', fontSize: '1.2rem' }}></i>
-                            </div>
-                            <div>
-                                <h3 style={{ margin: 0, color: '#2c3e50', fontSize: '2rem', fontWeight: '700' }}>
-                                    <CountUp end={dashboardData.shortlisted} duration={2} />
-                                </h3>
-                                <p style={{ margin: 0, color: '#6c757d', fontSize: '0.9rem' }}>Shortlisted</p>
-                            </div>
+                        <div className="text-center">
+                            <i className="fa fa-star" style={{ color: 'white', fontSize: '2.5rem', marginBottom: '1rem' }}></i>
+                            <h3 style={{ margin: 0, color: 'white', fontSize: '3rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+                                <CountUp end={dashboardData.shortlisted} duration={2} />
+                            </h3>
+                            <p style={{ margin: 0, color: 'white', fontSize: '0.9rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px' }}>Shortlisted</p>
                         </div>
                     </div>
                 </div>

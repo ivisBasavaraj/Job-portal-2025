@@ -39,12 +39,12 @@ exports.getJobs = async (req, res) => {
     const jobs = await Job.find(query)
       .populate({
         path: 'employerId',
-        select: 'companyName status',
-        match: { status: 'approved' }
+        select: 'companyName status isApproved',
+        match: { status: 'active', isApproved: true }
       })
       .sort({ createdAt: -1 });
     
-    const approvedJobs = jobs.filter(job => job.employerId !== null);
+    const approvedJobs = jobs.filter(job => job.employerId); 
     
     const EmployerProfile = require('../models/EmployerProfile');
     const jobsWithProfiles = await Promise.all(
@@ -113,8 +113,8 @@ exports.searchJobs = async (req, res) => {
     const jobs = await Job.find(query)
       .populate({
         path: 'employerId',
-        select: 'companyName status',
-        match: { status: 'approved' }
+        select: 'companyName status isApproved',
+        match: { status: 'active', isApproved: true }
       })
       .sort({ createdAt: -1 });
 
@@ -273,7 +273,7 @@ exports.getEmployerProfile = async (req, res) => {
 exports.getEmployers = async (req, res) => {
   try {
     const Employer = require('../models/Employer');
-    const employers = await Employer.find({ status: 'approved' }).select('-password');
+    const employers = await Employer.find({ status: 'active', isApproved: true }).select('-password');
     
     res.json({ success: true, employers });
   } catch (error) {

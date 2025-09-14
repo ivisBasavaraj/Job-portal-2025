@@ -96,52 +96,217 @@ function EmpDashboardPage() {
                 </div>
             </div>
 
-            {/* Stats Cards */}
+            {/* Stats Cards - Grid Layout */}
             <div className="row mb-4">
-                <div className="col-lg-4 col-md-6 mb-3">
-                    <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', borderLeft: '4px solid #007bff' }}>
-                        <div className="d-flex align-items-center">
-                            <div style={{ backgroundColor: '#e3f2fd', padding: '12px', borderRadius: '50%', marginRight: '1rem' }}>
-                                <i className="fa fa-briefcase" style={{ color: '#007bff', fontSize: '1.2rem' }}></i>
+                {/* Jobs Posted Card */}
+                <div className="col-xl-4 col-lg-6 col-md-6 mb-4">
+                    <div style={{ 
+                        backgroundColor: '#E3F2FD',
+                        padding: '2.5rem', 
+                        borderRadius: '20px', 
+                        boxShadow: '0 10px 30px rgba(227, 242, 253, 0.3)',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        cursor: 'pointer',
+                        position: 'relative',
+                        overflow: 'hidden'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+                        e.currentTarget.style.boxShadow = '0 20px 40px rgba(227, 242, 253, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                        e.currentTarget.style.boxShadow = '0 10px 30px rgba(227, 242, 253, 0.3)';
+                    }}>
+                        {/* Background Pattern */}
+                        <div style={{
+                            position: 'absolute',
+                            top: '-50%',
+                            right: '-50%',
+                            width: '200%',
+                            height: '200%',
+                            background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+                            pointerEvents: 'none'
+                        }}></div>
+                        
+                        <div className="d-flex align-items-center justify-content-between mb-3">
+                            <div style={{ 
+                                backgroundColor: 'rgba(255,255,255,0.2)', 
+                                padding: '12px', 
+                                borderRadius: '12px',
+                                backdropFilter: 'blur(10px)'
+                            }}>
+                                <i className="fa fa-briefcase" style={{ color: 'white', fontSize: '1.5rem' }}></i>
                             </div>
-                            <div>
-                                <h3 style={{ margin: 0, color: '#2c3e50', fontSize: '2rem', fontWeight: '700' }}>
-                                    <CountUp end={stats.totalJobs} duration={2} />
-                                </h3>
-                                <p style={{ margin: 0, color: '#6c757d', fontSize: '0.9rem' }}>Jobs Posted</p>
+                            <div className="text-end">
+                                <h2 style={{ 
+                                    margin: 0, 
+                                    color: 'white', 
+                                    fontSize: '2.5rem', 
+                                    fontWeight: '800',
+                                    textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                }}>
+                                    <CountUp end={stats.totalJobs} duration={2.5} />
+                                </h2>
                             </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style={{ 
+                                margin: 0, 
+                                color: 'white', 
+                                fontSize: '1.1rem', 
+                                fontWeight: '600',
+                                marginBottom: '0.5rem'
+                            }}>Jobs Posted</h4>
+                            <p style={{ 
+                                margin: 0, 
+                                color: 'rgba(255,255,255,0.8)', 
+                                fontSize: '0.85rem',
+                                fontWeight: '400'
+                            }}>Total job listings created</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="col-lg-4 col-md-6 mb-3">
-                    <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', borderLeft: '4px solid #ffc107' }}>
-                        <div className="d-flex align-items-center">
-                            <div style={{ backgroundColor: '#fff8e1', padding: '12px', borderRadius: '50%', marginRight: '1rem' }}>
-                                <i className="fa fa-paper-plane" style={{ color: '#ffc107', fontSize: '1.2rem' }}></i>
+                {/* Applications Card */}
+                <div className="col-xl-4 col-lg-6 col-md-6 mb-4">
+                    <div style={{ 
+                        backgroundColor: '#FFF8E1',
+                        padding: '2.5rem', 
+                        borderRadius: '20px', 
+                        boxShadow: '0 10px 30px rgba(255, 248, 225, 0.3)',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        cursor: 'pointer',
+                        position: 'relative',
+                        overflow: 'hidden'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+                        e.currentTarget.style.boxShadow = '0 20px 40px rgba(255, 248, 225, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                        e.currentTarget.style.boxShadow = '0 10px 30px rgba(255, 248, 225, 0.3)';
+                    }}>
+                        {/* Background Pattern */}
+                        <div style={{
+                            position: 'absolute',
+                            top: '-50%',
+                            right: '-50%',
+                            width: '200%',
+                            height: '200%',
+                            background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+                            pointerEvents: 'none'
+                        }}></div>
+                        
+                        <div className="d-flex align-items-center justify-content-between mb-3">
+                            <div style={{ 
+                                backgroundColor: 'rgba(255,255,255,0.2)', 
+                                padding: '12px', 
+                                borderRadius: '12px',
+                                backdropFilter: 'blur(10px)'
+                            }}>
+                                <i className="fa fa-paper-plane" style={{ color: 'white', fontSize: '1.5rem' }}></i>
                             </div>
-                            <div>
-                                <h3 style={{ margin: 0, color: '#2c3e50', fontSize: '2rem', fontWeight: '700' }}>
-                                    <CountUp end={stats.totalApplications} duration={2} />
-                                </h3>
-                                <p style={{ margin: 0, color: '#6c757d', fontSize: '0.9rem' }}>Applications Received</p>
+                            <div className="text-end">
+                                <h2 style={{ 
+                                    margin: 0, 
+                                    color: 'white', 
+                                    fontSize: '2.5rem', 
+                                    fontWeight: '800',
+                                    textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                }}>
+                                    <CountUp end={stats.totalApplications} duration={2.5} />
+                                </h2>
                             </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style={{ 
+                                margin: 0, 
+                                color: 'white', 
+                                fontSize: '1.1rem', 
+                                fontWeight: '600',
+                                marginBottom: '0.5rem'
+                            }}>Applications</h4>
+                            <p style={{ 
+                                margin: 0, 
+                                color: 'rgba(255,255,255,0.8)', 
+                                fontSize: '0.85rem',
+                                fontWeight: '400'
+                            }}>Total applications received</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="col-lg-4 col-md-6 mb-3">
-                    <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', borderLeft: '4px solid #28a745' }}>
-                        <div className="d-flex align-items-center">
-                            <div style={{ backgroundColor: '#e8f5e8', padding: '12px', borderRadius: '50%', marginRight: '1rem' }}>
-                                <i className="fa fa-star" style={{ color: '#28a745', fontSize: '1.2rem' }}></i>
+                {/* Shortlisted Card */}
+                <div className="col-xl-4 col-lg-6 col-md-6 mb-4">
+                    <div style={{ 
+                        backgroundColor: '#E8F5E8',
+                        padding: '2.5rem', 
+                        borderRadius: '20px', 
+                        boxShadow: '0 10px 30px rgba(232, 245, 232, 0.3)',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        cursor: 'pointer',
+                        position: 'relative',
+                        overflow: 'hidden'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+                        e.currentTarget.style.boxShadow = '0 20px 40px rgba(232, 245, 232, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                        e.currentTarget.style.boxShadow = '0 10px 30px rgba(232, 245, 232, 0.3)';
+                    }}>
+                        {/* Background Pattern */}
+                        <div style={{
+                            position: 'absolute',
+                            top: '-50%',
+                            right: '-50%',
+                            width: '200%',
+                            height: '200%',
+                            background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+                            pointerEvents: 'none'
+                        }}></div>
+                        
+                        <div className="d-flex align-items-center justify-content-between mb-3">
+                            <div style={{ 
+                                backgroundColor: 'rgba(255,255,255,0.2)', 
+                                padding: '12px', 
+                                borderRadius: '12px',
+                                backdropFilter: 'blur(10px)'
+                            }}>
+                                <i className="fa fa-star" style={{ color: 'white', fontSize: '1.5rem' }}></i>
                             </div>
-                            <div>
-                                <h3 style={{ margin: 0, color: '#2c3e50', fontSize: '2rem', fontWeight: '700' }}>
-                                    <CountUp end={stats.shortlisted} duration={2} />
-                                </h3>
-                                <p style={{ margin: 0, color: '#6c757d', fontSize: '0.9rem' }}>Shortlisted Candidates</p>
+                            <div className="text-end">
+                                <h2 style={{ 
+                                    margin: 0, 
+                                    color: 'white', 
+                                    fontSize: '2.5rem', 
+                                    fontWeight: '800',
+                                    textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                }}>
+                                    <CountUp end={stats.shortlisted} duration={2.5} />
+                                </h2>
                             </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style={{ 
+                                margin: 0, 
+                                color: 'white', 
+                                fontSize: '1.1rem', 
+                                fontWeight: '600',
+                                marginBottom: '0.5rem'
+                            }}>Shortlisted</h4>
+                            <p style={{ 
+                                margin: 0, 
+                                color: 'rgba(255,255,255,0.8)', 
+                                fontSize: '0.85rem',
+                                fontWeight: '400'
+                            }}>Candidates shortlisted</p>
                         </div>
                     </div>
                 </div>

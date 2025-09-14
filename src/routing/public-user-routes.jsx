@@ -38,6 +38,7 @@ import BlogGrid3Page from "../app/pannels/public-user/components/blogs/blogs-gri
 import BlogListPage from "../app/pannels/public-user/components/blogs/blogs-list";
 import BlogDetailPage from "../app/pannels/public-user/components/blogs/blog-detail";
 import ForgotPassword from "../app/pannels/public-user/components/pages/forgot-password";
+import AdminLogin from "../app/admin-login/page";
 
 function PublicUserRoutes() {
     return (
@@ -48,11 +49,12 @@ function PublicUserRoutes() {
             <Route path={publicUser.jobs.GRID_MAP} element={<JobsGridMapPage />} />
             <Route path={publicUser.jobs.LIST} element={<JobsListPage />} />
             <Route path={publicUser.jobs.DETAIL1} element={<JobDetail1Page />} />
+            <Route path="/job-detail/:id" element={<JobDetail1Page />} />
             <Route path={publicUser.jobs.DETAIL2} element={<JobDetail2Page />} />
             <Route path={publicUser.jobs.APPLY} element={<ApplyJobPage />} />
             <Route path={publicUser.employer.GRID} element={<EmployersGridPage />} />
             <Route path={publicUser.employer.LIST} element={<EmployersListPage />} />
-            <Route path={publicUser.employer.DETAIL1} element={<EmployersDetail1Page />} />
+            <Route path="/emp-detail/:id" element={<EmployersDetail1Page />} />
             <Route path={publicUser.employer.DETAIL2} element={<EmployersDetail2Page />} />
             <Route path={publicUser.pages.ABOUT} element={<AboutUsPage />} />
             <Route path={publicUser.pages.PRICING} element={<PricingPage />} />
@@ -62,6 +64,7 @@ function PublicUserRoutes() {
             <Route path={publicUser.pages.MAINTENANCE} element={<UnderMaintenancePage />} />
             <Route path={publicUser.pages.COMING} element={<ComingSoonPage />} />
             <Route path={publicUser.pages.LOGIN} element={<LoginPage />} />
+            <Route path={publicUser.pages.ADMIN_LOGIN} element={<AdminLogin />} />
             <Route path={publicUser.pages.AFTER_LOGIN} element={<AfterLoginPage />} />
             <Route path={publicUser.pages.FORGOT} element={<ForgotPassword/>} />
             <Route path={publicUser.pages.ICONS} element={<IconsPage />} />

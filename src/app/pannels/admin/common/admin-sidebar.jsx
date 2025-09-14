@@ -4,6 +4,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { loadScript, setMenuActive } from "../../../../globals/constants";
 import { admin, adminRoute, publicUser } from "../../../../globals/route-names";
 import { useEffect } from "react";
+import "./admin-sidebar.css";
 
 function AdminSidebarSection(props) {
     const currentpath = useLocation().pathname;

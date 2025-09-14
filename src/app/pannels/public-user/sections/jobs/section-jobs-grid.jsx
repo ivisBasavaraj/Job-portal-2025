@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { publicUser } from "../../../../../globals/route-names";
 import SectionPagination from "../common/section-pagination";
 import { useState, useEffect } from "react";
+import { isAuthenticated, redirectToLogin } from "../../../../../utils/auth";
 
 function SectionJobsGrid({ filters }) {
     const [jobs, setJobs] = useState([]);
@@ -48,27 +49,31 @@ function SectionJobsGrid({ filters }) {
                 filters.skills.forEach(skill => params.append('skills', skill));
             }
             
-            const response = await fetch(`http://localhost:5000/api/public/jobs?${params.toString()}`);
+            const url = `http://localhost:5000/api/public/jobs?${params.toString()}`;
+            console.log('Fetching jobs from:', url);
+            const response = await fetch(url);
             const data = await response.json();
             console.log('Jobs API response:', data);
+            console.log('Jobs count:', data.jobs?.length || 0);
             if (data.success) {
                 setJobs(data.jobs || data.data || []);
             } else {
                 console.error('API returned error:', data.message);
+                setJobs([]);
             }
         } catch (error) {
             console.error('Error fetching jobs:', error);
+            setJobs([]);
         } finally {
             setLoading(false);
         }
     };
 
     const handleApplyClick = (jobId) => {
-        const candidateToken = localStorage.getItem('candidateToken');
-        if (candidateToken) {
+        if (isAuthenticated('candidate')) {
             navigate(`/job-detail/${jobId}`);
         } else {
-            alert('Please login first to apply for jobs!');
+            redirectToLogin(navigate, `/job-detail/${jobId}`);
         }
     };
 
