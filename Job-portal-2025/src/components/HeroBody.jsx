@@ -1,132 +1,115 @@
-import React from "react";
-import { Container, Row, Col, Card, Button, Form, InputGroup } from "react-bootstrap";
-import { FaBriefcase, FaCalculator, FaCode, FaUsers } from "react-icons/fa";
+import React, { useState } from 'react';
+import './HeroBody.css';
+import { FaBriefcase, FaCalculator, FaCode, FaUsers } from 'react-icons/fa';
 
-const HeroBody = ({ className = "", style }) => {
+const HeroBody = () => {
+  const [searchData, setSearchData] = useState({
+    what: 'Job Title',
+    type: 'All Category',
+    location: 'Search...'
+  });
+
+  const jobCategories = [
+    { icon: FaBriefcase, name: 'Management', jobs: 70 },
+    { icon: FaCalculator, name: 'Accountant', jobs: 65 },
+    { icon: FaCode, name: 'Software', jobs: 55 },
+    { icon: FaCode, name: 'Software', jobs: 65 },
+    { icon: FaUsers, name: 'Human Resource', jobs: 45 },
+    { icon: FaBriefcase, name: 'Management', jobs: 70 },
+    { icon: FaCalculator, name: 'Accountant', jobs: 65 }
+  ];
+
+  const handleSearch = () => {
+    console.log('Searching with:', searchData);
+  };
+
   return (
-    <Container className={`py-5 ${className}`} style={style}>
-      <Row className="justify-content-center text-center">
-        <Col lg={10} xl={8}>
-          <h1 className="fw-bold display-5" style={{ color: "#333333", lineHeight: 1.2 }}>
-            Find the <span style={{ color: "#ff5a1f" }}>job</span> that fits your life
+    <div className="hero-body">
+      {/* Hero Section */}
+      <div className="hero-content">
+        <div className="hero-text">
+          <h1 className="hero-title">
+            Find the <span className="highlight">job</span> that fits<br />
+            your life
           </h1>
-          <p className="mt-3 mb-4" style={{ color: "#6c757d", fontSize: "1.05rem" }}>
+          <p className="hero-subtitle">
             Type your keyword, then click search to find your perfect job.
           </p>
-        </Col>
-      </Row>
+        </div>
 
-      <Row className="justify-content-center">
-        <Col lg={10} xl={8} className="mx-auto">
-          <Card className="shadow-sm rounded-4 border-0 mx-auto">
-            <Card.Body className="p-3 p-md-4">
-              <Form onSubmit={(e) => e.preventDefault()}>
-                <Row className="g-3 align-items-center justify-content-center">
-                  <Col xs={12} md={3}>
-                    <Form.Label className="mb-1 fw-semibold" style={{ color: "#333333" }}>
-                      WHAT
-                    </Form.Label>
-                    <Form.Select className="rounded-3" defaultValue="Job Title">
-                      <option>Job Title</option>
-                      <option>Company</option>
-                      <option>Keyword</option>
-                    </Form.Select>
-                  </Col>
-
-                  <Col xs={12} md={3}>
-                    <Form.Label className="mb-1 fw-semibold" style={{ color: "#333333" }}>
-                      TYPE
-                    </Form.Label>
-                    <Form.Select className="rounded-3" defaultValue="All Category">
-                      <option>All Category</option>
-                      <option>Full Time</option>
-                      <option>Part Time</option>
-                      <option>Contract</option>
-                      <option>Internship</option>
-                    </Form.Select>
-                  </Col>
-
-                  <Col xs={12} md={4}>
-                    <Form.Label className="mb-1 fw-semibold" style={{ color: "#333333" }}>
-                      LOCATION
-                    </Form.Label>
-                    <InputGroup>
-                      <InputGroup.Text className="bg-white border-end-0 rounded-start-3">
-                        🔍
-                      </InputGroup.Text>
-                      <Form.Control
-                        placeholder="Search..."
-                        className="rounded-end-3"
-                        style={{ borderLeft: "0" }}
-                      />
-                    </InputGroup>
-                  </Col>
-
-                  <Col xs={12} md={2} className="d-grid">
-                    <Form.Label className="mb-1 opacity-0">Find Job</Form.Label>
-                    <Button
-                      type="submit"
-                      className="rounded-pill py-2"
-                      style={{ backgroundColor: "#ff5a1f", border: "none" }}
-                    >
-                      Find Job
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      <Row className="justify-content-center mt-4">
-        <Col lg={10} xl={8}>
-          <div className="d-flex gap-3 pb-2" style={{ overflow: "hidden" }}>
-            {[
-              { name: "Management", jobs: 70, Icon: FaBriefcase },
-              { name: "Accountant", jobs: 65, Icon: FaCalculator },
-              { name: "Software", jobs: 55, Icon: FaCode },
-              { name: "Human Resource", jobs: 45, Icon: FaUsers },
-            ].map((cat) => (
-              <Card
-                key={cat.name}
-                className="border-0 shadow-sm rounded-4 flex-shrink-1 flex-grow-1"
-                style={{ minWidth: 140, flex: "1 1 140px" }}
+        {/* Search Bar */}
+        <div className="search-container">
+          <div className="search-field">
+            <label className="search-label">WHAT</label>
+            <select 
+              className="search-select"
+              value={searchData.what}
+              onChange={(e) => setSearchData({...searchData, what: e.target.value})}
+            >
+              <option value="Job Title">Job Title</option>
+              <option value="Developer">Developer</option>
+              <option value="Designer">Designer</option>
+              <option value="Manager">Manager</option>
+            </select>
+          </div>
+          
+          <div className="search-field">
+            <label className="search-label">TYPE</label>
+            <select 
+              className="search-select"
+              value={searchData.type}
+              onChange={(e) => setSearchData({...searchData, type: e.target.value})}
+            >
+              <option value="All Category">All Category</option>
+              <option value="Full Time">Full Time</option>
+              <option value="Part Time">Part Time</option>
+              <option value="Contract">Contract</option>
+            </select>
+          </div>
+          
+          <div className="search-field location-field">
+            <label className="search-label">LOCATION</label>
+            <div className="location-input">
+              <svg className="location-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M21 10C21 17L12 23L3 10C3 6.13401 7.13401 2 12 2C16.866 2 21 6.13401 21 10Z" stroke="currentColor" strokeWidth="2"/>
+                <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2"/>
+              </svg>
+              <select 
+                className="search-select location-select"
+                value={searchData.location}
+                onChange={(e) => setSearchData({...searchData, location: e.target.value})}
               >
-                <Card.Body className="text-center">
-                  <div
-                    className="mx-auto mb-3"
-                    style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: "50%",
-                      backgroundColor: "#ff5a1f",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                      fontWeight: 700,
-                    }}
-                    title={cat.name}
-                    aria-hidden="true"
-                  >
-                    {cat.Icon ? <cat.Icon size={18} /> : "•"}
-                  </div>
+                <option value="Search...">Search...</option>
+                <option value="New York">New York</option>
+                <option value="San Francisco">San Francisco</option>
+                <option value="London">London</option>
+              </select>
+            </div>
+          </div>
+          
+          <button className="search-btn" onClick={handleSearch}>
+            Find Job
+          </button>
+        </div>
 
-                  <div className="text-muted" style={{ color: "#6c757d" }}>
-                    {cat.jobs} Jobs
-                  </div>
-
-                  <div className="fw-semibold mt-1" style={{ color: "#333333" }}>
-                    {cat.name}
-                  </div>
-                </Card.Body>
-              </Card>
+        {/* Job Categories */}
+        <div className="categories-container">
+          <div className="categories-scroll">
+            {jobCategories.map((category, index) => (
+              <div key={index} className="category-card">
+                <div className="category-icon small">
+                  {category.icon ? <category.icon size={16} /> : null}
+                </div>
+                <div className="category-info">
+                  <span className="category-jobs">{category.jobs} Jobs</span>
+                  <h3 className="category-name">{category.name}</h3>
+                </div>
+              </div>
             ))}
           </div>
-        </Col>
-      </Row>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 };
 

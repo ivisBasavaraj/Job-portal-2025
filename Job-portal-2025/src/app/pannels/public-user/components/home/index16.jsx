@@ -6,6 +6,7 @@ import CountUp from "react-countup";
 import { useEffect, useState } from "react";
 import { loadScript, updateSkinStyle } from "../../../../../globals/constants";
 import api from "../../../../../utils/api";
+import HeroBody from "../../../../../components/HeroBody";
 
 function Home16Page() {
     const [jobs, setJobs] = useState([]);
@@ -45,7 +46,8 @@ function Home16Page() {
 
     return (
 			<>
-				<div className="twm-home16-banner-section site-bg-light-purple">
+				<HeroBody className="mt-4 mt-md-5" />
+<div className="twm-home16-banner-section site-bg-light-purple" style={{display:"none"}}>
 					<div className="row">
 						{/*Left Section*/}
 						<div className="col-xl-6 col-lg-6 col-md-12">
