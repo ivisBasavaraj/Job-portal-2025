@@ -39,7 +39,7 @@ exports.getJobs = async (req, res) => {
     const jobs = await Job.find(query)
       .populate({
         path: 'employerId',
-        select: 'companyName status isApproved',
+        select: 'companyName status isApproved employerType',
         match: { status: 'active', isApproved: true }
       })
       .sort({ createdAt: -1 });
@@ -52,7 +52,8 @@ exports.getJobs = async (req, res) => {
         const employerProfile = await EmployerProfile.findOne({ employerId: job.employerId._id });
         return {
           ...job.toObject(),
-          employerProfile: employerProfile
+          employerProfile: employerProfile,
+          postedBy: job.employerId.employerType === 'consultant' ? 'Consultant' : 'Company'
         };
       })
     );
@@ -64,6 +65,30 @@ exports.getJobs = async (req, res) => {
     });
   } catch (error) {
     console.error('Error in getJobs:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.getJobsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    
+    const jobs = await Job.find({ 
+      status: 'active',
+      category: new RegExp(category, 'i')
+    })
+    .populate({
+      path: 'employerId',
+      select: 'companyName status isApproved employerType',
+      match: { status: 'active', isApproved: true }
+    })
+    .sort({ createdAt: -1 });
+    
+    const approvedJobs = jobs.filter(job => job.employerId);
+    const roles = [...new Set(approvedJobs.map(job => job.title))];
+    
+    res.json({ success: true, roles, jobs: approvedJobs });
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -113,7 +138,7 @@ exports.searchJobs = async (req, res) => {
     const jobs = await Job.find(query)
       .populate({
         path: 'employerId',
-        select: 'companyName status isApproved',
+        select: 'companyName status isApproved employerType',
         match: { status: 'active', isApproved: true }
       })
       .sort({ createdAt: -1 });
@@ -277,6 +302,67 @@ exports.getEmployers = async (req, res) => {
     
     res.json({ success: true, employers });
   } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Apply for job without login
+exports.applyForJob = async (req, res) => {
+  try {
+    const { name, email, phone, message, jobId } = req.body;
+    
+    // Validate required fields
+    if (!name || !email || !phone || !jobId) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Name, email, phone, and job ID are required' 
+      });
+    }
+
+    // Check if job exists and is active
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ success: false, message: 'Job not found' });
+    }
+    if (job.status !== 'active') {
+      return res.status(400).json({ success: false, message: 'Job is no longer active' });
+    }
+
+    // Handle file upload if resume is provided
+    let resumeData = null;
+    if (req.file) {
+      const { fileToBase64 } = require('../middlewares/upload');
+      resumeData = {
+        filename: req.file.originalname,
+        originalName: req.file.originalname,
+        data: fileToBase64(req.file),
+        size: req.file.size,
+        mimetype: req.file.mimetype
+      };
+    }
+
+    // Create application record
+    const Application = require('../models/Application');
+    const application = await Application.create({
+      jobId,
+      candidateId: null, // No candidate ID for non-logged-in users
+      applicantName: name,
+      applicantEmail: email,
+      applicantPhone: phone,
+      coverLetter: message || '',
+      resume: resumeData,
+      status: 'pending',
+      appliedAt: new Date(),
+      isGuestApplication: true
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Application submitted successfully',
+      applicationId: application._id
+    });
+  } catch (error) {
+    console.error('Error in applyForJob:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };

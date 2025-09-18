@@ -5,6 +5,11 @@ const jobSchema = new mongoose.Schema({
   description: { type: String, required: true },
   employerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Employer', required: true },
   location: { type: String, required: true },
+  // Consultant-specific fields
+  companyLogo: { type: String }, // Base64 encoded image (only for consultants)
+  companyName: { type: String }, // Company name (only for consultants)
+  companyDescription: { type: String }, // Company description (only for consultants)
+  category: { type: String }, // Job category (IT, Sales, Marketing, etc.)
   salary: {
     min: { type: Number },
     max: { type: Number },

@@ -42,7 +42,15 @@ export default function EmpPostJob({ onNext }) {
 			videoCall: false,
 			documentVerification: false,
 		},
+		// Consultant-specific fields
+		companyLogo: "",
+		companyName: "",
+		companyDescription: "",
+		category: ""
 	});
+
+	const [employerType, setEmployerType] = useState('company');
+	const [logoFile, setLogoFile] = useState(null);
 
 	/* Helpers */
 	const update = (patch) => setFormData((s) => ({ ...s, ...patch }));
@@ -51,7 +59,39 @@ export default function EmpPostJob({ onNext }) {
 		if (isEditMode) {
 			fetchJobData();
 		}
+		fetchEmployerType();
 	}, [id, isEditMode]);
+
+	const fetchEmployerType = async () => {
+		try {
+			const token = localStorage.getItem('employerToken');
+			const response = await fetch('http://localhost:5000/api/employer/profile', {
+				headers: { 'Authorization': `Bearer ${token}` }
+			});
+			const data = await response.json();
+			console.log('Profile data:', data);
+			if (data.success && data.profile?.employerId) {
+				const empType = data.profile.employerId.employerType || 'company';
+				const empCategory = data.profile.employerCategory;
+				console.log('Employer Type from DB:', empType);
+				console.log('Employer Category from DB:', empCategory);
+				// Check both employerType and employerCategory
+				const finalType = (empType === 'consultant' || empCategory === 'consultancy') ? 'consultant' : 'company';
+				console.log('Final employer type set to:', finalType);
+				setEmployerType(finalType);
+				// For consultants, check if they have default company info in profile
+				if (empType === 'consultant' && data.profile.consultantCompanyName) {
+					update({
+						companyLogo: data.profile.consultantCompanyLogo || '',
+						companyName: data.profile.consultantCompanyName || '',
+						companyDescription: data.profile.consultantCompanyDescription || ''
+					});
+				}
+			}
+		} catch (error) {
+			console.error('Error fetching employer type:', error);
+		}
+	};
 
 	const fetchJobData = async () => {
 		try {
@@ -91,6 +131,11 @@ export default function EmpPostJob({ onNext }) {
 							twoWay: false,
 							noCab: false,
 						},
+						// Consultant fields
+						companyLogo: job.companyLogo || '',
+						companyName: job.companyName || '',
+						companyDescription: job.companyDescription || '',
+						category: job.category || '',
 						skillInput: '',
 						joiningDate: '',
 						interviewMode: {
@@ -132,6 +177,18 @@ export default function EmpPostJob({ onNext }) {
 			[group]: { ...s[group], [key]: !s[group][key] },
 		}));
 
+	const handleLogoUpload = (e) => {
+		const file = e.target.files[0];
+		if (file) {
+			setLogoFile(file);
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				update({ companyLogo: e.target.result });
+			};
+			reader.readAsDataURL(file);
+		}
+	};
+
 	const submitNext = async () => {
 		try {
 			const token = localStorage.getItem('employerToken');
@@ -139,6 +196,22 @@ export default function EmpPostJob({ onNext }) {
 				alert('Please login first');
 				return;
 			}
+
+			// Validate consultant fields
+			if (employerType === 'consultant') {
+				if (!formData.companyName.trim()) {
+					alert('Please enter Company Name (required for consultants)');
+					return;
+				}
+				if (!formData.companyDescription.trim()) {
+					alert('Please enter Company Description (required for consultants)');
+					return;
+				}
+			}
+
+			// Debug logging
+			console.log('Employer Type:', employerType);
+			console.log('Form Data:', formData);
 
 			const jobData = {
 				title: formData.jobTitle,
@@ -156,8 +229,23 @@ export default function EmpPostJob({ onNext }) {
 				interviewRoundsCount: parseInt(formData.interviewRoundsCount) || 0,
 				interviewRoundTypes: formData.interviewRoundTypes,
 				offerLetterDate: formData.offerLetterDate || null,
-				transportation: formData.transportation
+				transportation: formData.transportation,
+				category: formData.category
 			};
+
+			// Add consultant-specific fields if employer is consultant
+			if (employerType === 'consultant') {
+				console.log('Adding consultant fields:', {
+					companyLogo: formData.companyLogo,
+					companyName: formData.companyName,
+					companyDescription: formData.companyDescription
+				});
+				jobData.companyLogo = formData.companyLogo;
+				jobData.companyName = formData.companyName;
+				jobData.companyDescription = formData.companyDescription;
+			}
+
+			console.log('Final job data being sent:', jobData);
 
 			const url = isEditMode 
 				? `http://localhost:5000/api/employer/jobs/${id}`
@@ -173,6 +261,8 @@ export default function EmpPostJob({ onNext }) {
 				},
 				body: JSON.stringify(jobData)
 			});
+
+			console.log('Response status:', response.status);
 
 			if (response.ok) {
 				const data = await response.json();
@@ -305,6 +395,51 @@ export default function EmpPostJob({ onNext }) {
 				</h3>
 
 				<div style={grid}>
+					{/* Consultant Fields */}
+					{employerType === 'consultant' && (
+						<>
+							<div style={fullRow}>
+								<h4 style={{ margin: "12px 0", fontSize: 15, color: "#0f172a", background: '#e8f5e8', padding: '8px', borderRadius: '4px' }}>
+									✓ Company Information (Consultant Mode)
+								</h4>
+							</div>
+							<div>
+								<label style={label}>Company Logo</label>
+								<input
+									style={input}
+									type="file"
+									accept="image/*"
+									onChange={handleLogoUpload}
+								/>
+								{formData.companyLogo && (
+									<img src={formData.companyLogo} alt="Company Logo" style={{width: '60px', height: '60px', marginTop: '8px', objectFit: 'cover'}} />
+								)}
+							</div>
+							<div>
+								<label style={{...label, color: '#d32f2f', fontWeight: 'bold'}}>Company Name * (Required for Consultants)</label>
+								<input
+									style={{...input, borderColor: formData.companyName ? '#4caf50' : '#f44336'}}
+									placeholder="e.g., Tech Solutions Inc."
+									value={formData.companyName}
+									onChange={(e) => update({ companyName: e.target.value })}
+									required
+								/>
+								{!formData.companyName && <p style={{color: '#f44336', fontSize: '12px', margin: '4px 0 0 0'}}>Please enter company name</p>}
+							</div>
+							<div style={fullRow}>
+								<label style={{...label, color: '#d32f2f', fontWeight: 'bold'}}>Company Description * (Required for Consultants)</label>
+								<textarea
+									style={{...input, minHeight: '80px', borderColor: formData.companyDescription ? '#4caf50' : '#f44336'}}
+									placeholder="Brief description about the company..."
+									value={formData.companyDescription}
+									onChange={(e) => update({ companyDescription: e.target.value })}
+									required
+								/>
+								{!formData.companyDescription && <p style={{color: '#f44336', fontSize: '12px', margin: '4px 0 0 0'}}>Please enter company description</p>}
+							</div>
+						</>
+					)}
+
 					{/* Row 1 */}
 					<div>
 						<label style={label}>Job Title / Designation *</label>
@@ -317,13 +452,34 @@ export default function EmpPostJob({ onNext }) {
 					</div>
 
 					<div>
+						<label style={label}>Job Category *</label>
+						<select
+							style={{ ...input, appearance: "none", backgroundImage: "none" }}
+							value={formData.category}
+							onChange={(e) => update({ category: e.target.value })}
+						>
+							<option value="" disabled>Select Category</option>
+							<option value="IT">IT</option>
+							<option value="Sales">Sales</option>
+							<option value="Marketing">Marketing</option>
+							<option value="Finance">Finance</option>
+							<option value="HR">HR</option>
+							<option value="Operations">Operations</option>
+							<option value="Design">Design</option>
+							<option value="Healthcare">Healthcare</option>
+							<option value="Education">Education</option>
+							<option value="Other">Other</option>
+						</select>
+					</div>
+
+					<div>
 						<label style={label}>Job Type *</label>
 						<select
 							style={{ ...input, appearance: "none", backgroundImage: "none" }}
 							value={formData.jobType}
 							onChange={(e) => update({ jobType: e.target.value })}
 						>
-							<option value="" selected disabled>Select Job Type</option>
+							<option value="" disabled>Select Job Type</option>
 							<option>Full-Time</option>
 							<option>Part-Time</option>
 							<option>Internship (Paid)</option>
@@ -409,7 +565,7 @@ export default function EmpPostJob({ onNext }) {
 							value={formData.education}
 							onChange={(e) => update({ education: e.target.value })}
 						>
-							<option value="" selected disabled>
+							<option value="" disabled>
 								Select Education Level
 							</option>
 							<option value="Any">Any</option>

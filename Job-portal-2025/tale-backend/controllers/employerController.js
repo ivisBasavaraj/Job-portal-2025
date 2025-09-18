@@ -13,17 +13,26 @@ const generateToken = (id, role) => {
 // Authentication Controllers
 exports.registerEmployer = async (req, res) => {
   try {
-    const { name, email, password, phone, companyName, employerCategory } = req.body;
+    const { name, email, password, phone, companyName, employerCategory, employerType } = req.body;
 
     const existingEmployer = await Employer.findOne({ email });
     if (existingEmployer) {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
 
-    const employer = await Employer.create({ name, email, password, phone, companyName });
+    const finalEmployerType = employerType || (employerCategory === 'consultancy' ? 'consultant' : 'company');
+
+    const employer = await Employer.create({ 
+      name, 
+      email, 
+      password, 
+      phone, 
+      companyName,
+      employerType: finalEmployerType
+    });
     await EmployerProfile.create({ 
       employerId: employer._id,
-      employerCategory: employerCategory || '',
+      employerCategory: employerCategory || finalEmployerType,
       companyName: companyName,
       email: email,
       phone: phone
@@ -39,7 +48,8 @@ exports.registerEmployer = async (req, res) => {
         id: employer._id,
         name: employer.name,
         email: employer.email,
-        companyName: employer.companyName
+        companyName: employer.companyName,
+        employerType: employer.employerType
       }
     });
   } catch (error) {
@@ -79,7 +89,8 @@ exports.loginEmployer = async (req, res) => {
         id: employer._id,
         name: employer.name,
         email: employer.email,
-        companyName: employer.companyName
+        companyName: employer.companyName,
+        employerType: employer.employerType
       }
     });
   } catch (error) {
@@ -214,6 +225,7 @@ exports.createJob = async (req, res) => {
     }
 
     const jobData = { ...req.body, employerId: req.user._id };
+    console.log('Creating job with data:', jobData); // Debug log
     const job = await Job.create(jobData);
 
     // Create notification for all candidates when job is posted
@@ -239,6 +251,9 @@ exports.createJob = async (req, res) => {
 
 exports.updateJob = async (req, res) => {
   try {
+    console.log('Update job request body:', req.body);
+    console.log('Job ID:', req.params.jobId);
+    
     const job = await Job.findOneAndUpdate(
       { _id: req.params.jobId, employerId: req.user._id },
       req.body,
@@ -249,8 +264,10 @@ exports.updateJob = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Job not found' });
     }
 
+    console.log('Updated job:', job);
     res.json({ success: true, job });
   } catch (error) {
+    console.log('Update job error:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -434,10 +451,23 @@ exports.getDashboardStats = async (req, res) => {
 exports.getEmployerApplications = async (req, res) => {
   try {
     const CandidateProfile = require('../models/CandidateProfile');
+    const { companyName } = req.query; // Filter by company name for consultants
     
-    const applications = await Application.find({ employerId: req.user._id })
+    let query = { employerId: req.user._id };
+    
+    // If companyName filter is provided (for consultants)
+    if (companyName) {
+      const jobs = await Job.find({ 
+        employerId: req.user._id, 
+        companyName: new RegExp(companyName, 'i') 
+      }).select('_id');
+      const jobIds = jobs.map(job => job._id);
+      query.jobId = { $in: jobIds };
+    }
+    
+    const applications = await Application.find(query)
       .populate('candidateId', 'name email phone')
-      .populate('jobId', 'title location')
+      .populate('jobId', 'title location companyName')
       .sort({ createdAt: -1 });
 
     // Add profile pictures to applications
@@ -491,6 +521,19 @@ exports.getApplicationDetails = async (req, res) => {
     };
 
     res.json({ success: true, application: responseApplication });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.getConsultantCompanies = async (req, res) => {
+  try {
+    const companies = await Job.distinct('companyName', { 
+      employerId: req.user._id,
+      companyName: { $exists: true, $ne: null, $ne: '' }
+    });
+    
+    res.json({ success: true, companies });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
